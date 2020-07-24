@@ -1,0 +1,186 @@
+Installation:
+
+This package requires you to install a few things if you starting from scratch. Right now the guide will give instructions for 
+mac and linux. If you are running windows, we have an instruction for Windows below (we gratefully acknowledge Mark Bell compiling these).
+
+As noted on http://www.oishi.info.waseda.ac.jp/~takayasu/hikmot/, this package requires python2.7, Snappy, and boost.
+We will now try to give step by step instructions for how to install this. Skip any steps you might have already done.
+
+1) Are you using a mac?
+If yes, then a) do you have developer tools installed? 
+If not then go to: 
+	https://developer.apple.com/downloads/index.action#
+and register for a free apple ID. Then download the appropriate version. At the time of writing,
+it should be version 4.6.2 with Mountain lion (10.8+) and 3.2.2 with Snow Leopard (10.6).
+
+2) Install python2.7 from python.org.
+There is a stripped down version of python that Apple distributes. Users experience trouble installing 
+snappy with the apple version so the version from python.org is preferred. 
+
+3) Install Snappy as a python module. We can't say it better than the instructions given here:
+	http://www.math.uic.edu/t3m/SnapPy/installing.html
+
+4) Install boost using either
+
+For Unbuntu: 
+	sudo apt-get install libboost-all-dev
+
+For macs (with ports installed): 
+	sudo port install boost
+
+And check that your path variable knows were boost is:
+if you haven't done anything fancy
+
+echo $PATH 
+
+should have probably /opt/local/bin/boost (for macs using ports) or /usr/lib/boost (for linux)
+
+If not, you need to update your PATH variable:
+
+	PATH=$PATH:/opt/local/bin/boost    (macs) or 
+	PATH=$PATH:/usr/lib/boost         (linux)
+
+5) Download hikmot in zip or tar.gz format from
+	http://www.oishi.info.waseda.ac.jp/~takayasu/hikmot/#downloads
+
+6) Inside the hikmot directory type:
+	sudo python setup.py install
+
+
+
+Instructions for Windows (we gratefully acknowledge Mark Bell compiling these)
+           
+                                                                                                                
+Install Python:
+	Download and run the Python2.7 installer: http://www.python.org/ftp/python/2.7/python-2.7.msi
+	Add the Python directory (C:\Python27) to the PATH environment variable.
+
+Install setup_tools:
+	Download and run ez_install: https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py
+
+Install snappy: 
+	open command prompt and run
+	python -m easy_install -U -f http://snappy.computop.org/get snappy
+
+Install missing dlls:
+	Download and run dependency walker: http://www.dependencywalker.com/
+	Open C:\Python27\Lib\site-packages\snappy-1.5.1-py2.7-win32.egg\snappy\SnapPy.pyd in dependency walker
+	Download any missing dll files and copy them to C:\windows\System32
+
+Test snappy:
+	open command prompt and run:
+	python
+	import snappy
+
+Install MSVC9.0:
+	Download and install Visual C++ 2008 express edition: go.microsoft.com/?linkid=7729279
+
+Install boost:
+	Download boost: http://www.boost.org/users/download/#live
+	Unzip boost_1_54_0.zip to directory X
+
+Install hikmot:
+	Download hikmot: http://www.oishi.info.waseda.ac.jp/~takayasu/hikmot/
+	Unzip hikmot_v0.0.7.zip to directory Y
+	Change the include_dirs list in .\path\to\directory\Y\setup.py to "['cpp_src', 'path\\to\\directory\\X'],"
+	open command prompt and run:
+	cd .\path\to\directory\Y
+	python setup.py install
+
+Test hikmot:
+	open command prompt and run:
+	python
+	import snappy
+	import hikmot
+	M = snappy.Manifold('4_1')
+	hikmot.verify_hyperbolicity(M, False)
+	
+	Should return >>> (True, ...)
+
+This was tested on a machine with the following installation:
+Python 2.7
+setuptools 1.1.6
+SnapPy 2.0
+MSCV 2008
+boost 1.54.0  
+
+
+
+
+If all goes well now you have it installed! 
+
+In python we can use hikmot as follows:
+
+>>>import snappy
+>>>import hikmot 
+>>>M = snappy.Manifold('m004')
+>>>hikmot.verify_hyperbolicity(M,True)
+
+This will return "OK" for any valid triangulation of a hyperbolic manifold and "False" otherwise. 
+The flag "True" turns on verbose reporting of the check_hyp function. For verifying large sets of
+ manifolds, such as a census, it is recommended this flag be set to "False".
+
+That's it! We just showed the mainfold 'm004', aka the figure 8 knot complement, is hyperbolic.
+
+The code to verify the whole cusped census is here:
+http://www.oishi.info.waseda.ac.jp/~takayasu/hikmot/Codes/VerifyCuspedCensus.py
+
+And the closed census is here:
+http://www.oishi.info.waseda.ac.jp/~takayasu/hikmot/Codes/VerifyClosedManifolds.py
+And more information on the subtleties of these techniques are explained here:
+http://www.oishi.info.waseda.ac.jp/~takayasu/hikmot/#census
+
+
+
+
+FAQ:
+
+Q: How should I cite this program?
+Please cite as:
+N. Hoffman, H. Ichihara, M. Kashiwagi, H. Masai, S. Oishi, and A. Takayasu, Verified computations for hyperbolic 3-manifolds, code available from http://www.oishi.info.waseda.ac.jp/~takayasu/hikmot/
+
+
+
+FAQ Mac:
+
+************************************************************************************
+
+Q: How do I check my python and gcc versions?
+
+A: To find out what version of python and gcc you have, one of the easiest ways is to type "python" into the command line.
+
+Here is a sample:
+$ python
+Python 2.7.4 (v2.7.4:026ee0057e2d, Apr  6 2013, 11:43:10) 
+[GCC 4.2.1 (Apple Inc. build 5666) (dot 3)] on darwin
+
+So in this example, the computer is running python 2.7.4 and gcc 4.2.1. You can update your python
+from python.org and update the latest gcc using ports:
+
+/opt/local/bin/port install gcc_select
+port select --list gcc
+sudo port select --set gcc gcc**** (here you want to chooe the correct version.) 
+
+************************************************************************************
+
+Q: How do install ports?
+
+A: You can see instructions for MacPorts from http://www.macports.org/install.php
+
+
+************************************************************************************
+
+Q: It seems like my python is up to date, but it still doesn't work. Any suggestions?
+
+A: Macs sometimes have a version of python loaded from apple. Try downloading python2.7 (or higher) from
+python.org. It tends to behave better with snappy.
+
+************************************************************************************
+
+Q: /usr/include/ does not have python2.7 as a folder.
+
+(Warning this could be dangerous, so proceed with caution.)
+A: One way to fix this is to update your xCode which requires updating to 10.7. If this is not an option,
+try looking for /Applications/sage/local/include/python2.7 and copying the files from there to /usr/include/python2.7
+
+************************************************************************************
